@@ -22,7 +22,7 @@ positive = data[data['result'].isin([1])]
 
 # get people who have a negative covid test
 negative = data[data['result'].isin([0])]
-
+#
 # print("positive = ")
 # print(positive)
 #
@@ -33,10 +33,10 @@ negative = data[data['result'].isin([0])]
 # plot the graph between the age and the expected ratio to have covid
 
 fig, ax = plt.subplots(figsize=(8, 5))
-ax.scatter(positive['age'], positive['ratio'],
+ax.scatter(positive['ratio'], positive['age'],
            s=50, c='b', marker='o', label='positive')
 
-ax.scatter(negative['age'], negative['ratio'],
+ax.scatter(negative['ratio'], negative['age'],
            s=50, c='r', marker='x', label='negative')
 
 plt.show()
@@ -55,6 +55,7 @@ plt.show()
 
 
 # get dimension of the data matrix
+
 cols = data.shape[1]
 
 # let X be the features matrix columns for 0 to cols-1 for all rows, contains the bias column
@@ -94,8 +95,9 @@ def cost(thetaVal, xVal, yVal):
 
     # calculate cost value
     firstTerm = np.multiply(-yVal, np.log(sigmoid(xVal*thetaVal.T)))
-    secondTerm = np.multiply((1- yVal), np.log(1 - sigmoid(xVal*thetaVal.T)))
-    return np.sum(firstTerm - secondTerm) / len(xVal)
+    secondTerm = np.multiply((yVal - 1), np.log(1 - sigmoid(xVal*thetaVal.T)))
+    
+    return np.sum(firstTerm + secondTerm) / len(xVal)
 
 
 costBeforeOptimization = cost(theta, x, y)
@@ -124,6 +126,7 @@ def gradient(thetaV, xV, yV):
 
 
 # using fmin_tnc function from scipy library to optimize the cost function
+
 result = opt.fmin_tnc(func=cost, x0=theta, fprime=gradient, args=(x, y))
 
 # result is a tuple contains theta values, how many times it tries to get the theta
@@ -135,7 +138,7 @@ result = opt.fmin_tnc(func=cost, x0=theta, fprime=gradient, args=(x, y))
 costAfterOptimization = cost(result[0], x, y)
 # print cost values before optimization and after
 
-print('cost = ', round(costBeforeOptimization, 2))
+print('cost before optimization = ', round(costBeforeOptimization, 2))
 print('cost after optimization = ', round(costAfterOptimization, 2))
 
 # definition of predict function which get the predicted diagnosing result of the given
@@ -169,6 +172,7 @@ print('accuracy = {0}%'.format(round(accuracy*100, 2)))
 truePositive = [1 if (a + b) == 2 else 0 for (a, b) in zip(prediction, y)]
 falsePositive = [1 if (a + b) == 1 and b == 1 else 0 for (a, b) in zip(prediction, y)]
 falseNegative = [1 if (a + b) == 1 and a == 1 else 0 for (a, b) in zip(prediction, y)]
+
 
 Precision = sum(map(int, truePositive)) / sum(map(int, (truePositive + falsePositive)))
 Recall = sum(map(int, truePositive)) / sum(map(int, (truePositive + falseNegative)))
