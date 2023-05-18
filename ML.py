@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import scipy.optimize as opt
 
 
-path = '/media/yassen/01D5F192D609BFA0/Education/Third year 2023/Expert Systems/project/data.csv'
+path = 'https://raw.githubusercontent.com/YassenMohamed7/ML/master/data.csv'
 
 # get data as scv file from the given path
 data = pd.read_csv(path, header=None, names=[
